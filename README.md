@@ -19,4 +19,8 @@ See the README's enclosed in the individual folders for more details.
 
 - Trackman
 
+# Installation
 
+1. Install a python virtual environment on your machine.
+1. To install dependencies, run the following commands:
+    > (todo)
