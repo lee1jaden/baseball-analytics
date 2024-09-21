@@ -17,8 +17,10 @@ Note: See the README's enclosed in the individual subdirectories for more detail
 
 # Installation
 
-1. Install a python virtual environment on your machine.
-1. To install dependencies, run the following commands:
-    > (todo)
+1. Install a python virtual environment such as venv on your machine.
+1. To install dependencies, run the following command:
+    > pip install -r requirements.txt
+1. To update dependencies, run the following command:
+    > pip freeze > requirements.txt
 1. If a Python file does not run, provide executable permissions with:
     > chmod +x [filepath]
