@@ -8,8 +8,10 @@
             "name": "Trackman",
             "type": "debugpy",
             "request": "launch",
-            "program": "./trackman/trackman.py",
-            "console": "integratedTerminal"
+            "cwd": "./trackman",
+            "program": "./trackman.py",
+            "args": "",
+            "console": "integratedTerminal",
         },
         {
             "name": "Python Debugger: Current File",
