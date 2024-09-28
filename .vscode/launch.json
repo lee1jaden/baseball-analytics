@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Trackman",
+            "name": "TrackMan Pitchers",
             "type": "debugpy",
             "request": "launch",
-            "cwd": "./trackman",
-            "program": "./trackman.py",
+            "cwd": "./",
+            "program": "./trackman-pitchers.py",
             "args": "",
             "console": "integratedTerminal",
         },

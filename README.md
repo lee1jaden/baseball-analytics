@@ -1,4 +1,6 @@
-# Overview
+# Baseball Analytics
+
+## Overview
 
 - **Title: baseball-analytics**
 - *Author: Jaden Lee*
@@ -13,14 +15,19 @@
 
 [![The backdrop at Smith's Ballpark is incredible!](/smiths-ballpark.webp "Smith's Ballpark: Home of Utah Baseball")](https://utahutes.com/sports/baseball)
 
-Note: See the README's enclosed in the individual subdirectories for more details on specific projects.
+## Installation
 
-# Installation
-
-1. Install a python virtual environment such as venv on your machine.
-1. To install dependencies, run the following command:
+1. Install Python and a virtual environment such as venv on your machine. Make sure to activate it before installing dependencies from the 'requirements.txt' file.
+1. To install dependencies, run the following commands:
+    > pip install pipreqs
     > pip install -r requirements.txt
 1. To update dependencies, run the following command:
-    > pip freeze > requirements.txt
+    > pipreqs . --ignore ./.venv --forceS
+1. Run python executables from the terminal or use the debug window.
 1. If a Python file does not run, provide executable permissions with:
     > chmod +x [filepath]
+
+## References
+
+1. Here is a link to an overview of the data typically contained in TrackMan CSV files: <https://support.trackmanbaseball.com/hc/en-us/articles/5089413493787-V3-FAQs-Radar-Measurement-Glossary-Of-Terms>
+1. The example TrackMan CSV file was downloaded from a website belonging to Roanoke College ([Click here!](<https://apps.roanoke.edu/minton/statsrcb20.html>)). It uses data from Game 1 vs. Elizabethtown of the 2020 season.

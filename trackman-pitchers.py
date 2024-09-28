@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+# Title: trackman.py
+# Author: Jaden Lee
+# Created Date: September 8, 2024
+# Description: This folder is specifically for analyzing TrackMan data for pitchers. 
+
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +18,7 @@ class Pitcher:
         self.pitches = []
     
     def __str__(self):
-        return f"{self.name} ({self.throwingHand[0]})"
+        return f'{self.name.split(", ")[1].upper()} {self.name.split(", ")[0].upper()} ({self.throwingHand[0]})'
 
 
 class Pitch:
@@ -25,7 +30,7 @@ class Pitch:
         self.horizontalBreak = horizontalBreak
     
     def __str__(self):
-        return f"{self.name} ({self.throwingHand[0]})"
+        return f"{self.pitchType}"
 
 
 trackmanFields = { 
@@ -62,13 +67,11 @@ with open('./data/example-trackman.csv', newline='') as readFile:
 # Make matplotlib chart of pitch profiles
 
 for pitcher in pitchers:
-    firstName = pitcher.name.split(", ")[1]
-    lastName = pitcher.name.split(", ")[0]
     pitchTypes = set(map(lambda p: p.pitchType, pitcher.pitches))
 
     fig, ax = plt.subplots()
     fig.suptitle("Pitch Arsenal Chart (Pitcher's Viewpoint)")
-    ax.set_title(f'{firstName.upper()} {lastName.upper()} ({pitcher.throwingHand[0]}) - {len(pitcher.pitches)} Pitches')
+    ax.set_title(f'{pitcher} - {len(pitcher.pitches)} Pitches')
     ax.set_xlabel('Horizontal Break (in)')
     ax.set_ylabel('Induced Vertical Break (in)')
     ax.set_xlim(-25, 25)
@@ -85,7 +88,7 @@ for pitcher in pitchers:
         colorIndex += 1
     
     ax.legend()
-    filepath = f'./profiles/{firstName.upper()}_{lastName.upper()}_{pitcher.id}'
+    filepath = './profiles/{}_{}_{}'.format(f'{pitcher}'.split()[0], f'{pitcher}'.split()[1], pitcher.id)
     if not os.path.exists(filepath):
         os.makedirs(filepath)
     fig.savefig(f'{filepath}/pitch-arsenal.png')
