@@ -21,6 +21,7 @@ with open('./trackman/data/fake-data.csv', 'w', newline='') as writeFile:
         entry.update({field: "Lee, Jaden"})
     writer.writerow(entry)
 """
+
 # ---------------------------------------------------------------------------
 
 """
@@ -36,4 +37,14 @@ plt.xlabel('assigned by matplotlib')
 plt.ylabel('some numbers')
 plt.grid(True)
 plt.savefig('plot.png')
+"""
+
+# ---------------------------------------------------------------------------
+
+"""
+import sys
+
+# Read command line arguments.
+arguments = sys.argv
+print(arguments)
 """

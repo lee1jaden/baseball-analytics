@@ -1,2 +1,5 @@
 # Python virtual environment files
 .venv
+
+# Plots saved as PNG files
+*.png

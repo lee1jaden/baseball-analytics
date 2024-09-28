@@ -2,6 +2,8 @@
 
 import csv
 import matplotlib.pyplot as plt
+import numpy as np
+import os
 
 class Pitcher:
     def __init__(self, id, name, throwingHand):
@@ -78,8 +80,12 @@ for pitcher in pitchers:
     for pt in pitchTypes:
         horizBreaks = [p.horizontalBreak for p in pitcher.pitches if p.pitchType == pt]
         vertBreaks = [p.verticalBreak for p in pitcher.pitches if p.pitchType == pt]
-        ax.plot(horizBreaks, vertBreaks, colors[colorIndex], label=pt)
+        avgSpeed = np.mean([p.speed for p in pitcher.pitches if p.pitchType == pt]).round(1)
+        ax.plot(horizBreaks, vertBreaks, colors[colorIndex], label=f'{pt} ({avgSpeed} mph)')
         colorIndex += 1
     
     ax.legend()
-    fig.savefig(f'./pitch-arsenals/{firstName.upper()}_{lastName.upper()}_{pitcher.id}.png')
+    filepath = f'./profiles/{firstName.upper()}_{lastName.upper()}_{pitcher.id}'
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
+    fig.savefig(f'{filepath}/pitch-arsenal.png')
