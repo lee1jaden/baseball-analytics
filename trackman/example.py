@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 import csv
 
@@ -21,10 +23,17 @@ with open('./trackman/data/fake-data.csv', 'w', newline='') as writeFile:
 """
 # ---------------------------------------------------------------------------
 
+"""
 import matplotlib.pyplot as plt
 
-# Tutorial: https://matplotlib.org/stable/tutorials/pyplot.html
-# Plot some data with pitches per plate appearance grouped by inning
-plt.plot([1, 2, 3, 4])
+# Plot some data and make it look nice.
+plt.plot([1, 2, 3, 4], [1, 4, 9, 16], "ro", label="Fastball")
+plt.plot([1, 2, 3, 4], [0, 0, 0, 0], "bo", label="Slider")
+plt.axis((-20, 20, -20, 20))
+plt.legend()
+plt.title('example plot')
+plt.xlabel('assigned by matplotlib')
 plt.ylabel('some numbers')
-plt.show()
+plt.grid(True)
+plt.savefig('plot.png')
+"""
