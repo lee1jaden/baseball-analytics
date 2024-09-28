@@ -1,32 +1,85 @@
-import csv
+#!/usr/bin/env python3
 
-pitchers = {}
-pitchFields = { "Name": "Pitcher",
-                "ThrowingHand": "PitcherThrows",
-                "Set": "PitcherSet",
-                "PitchType": "AutoPitchType",
-                "Speed": "RelSpeed",
-                "VerticalBreak": "InducedVertBreak",
-                "HorizontalBreak": "HorzBreak"
-                }
+import csv
+import matplotlib.pyplot as plt
+
+class Pitcher:
+    def __init__(self, id, name, throwingHand):
+        self.id = id
+        self.name = name
+        self.throwingHand = throwingHand
+        self.pitches = []
+    
+    def __str__(self):
+        return f"{self.name} ({self.throwingHand[0]})"
+
+
+class Pitch:
+    def __init__(self, set, pitchType, speed, verticalBreak, horizontalBreak):
+        self.set = set
+        self.pitchType = pitchType
+        self.speed = speed
+        self.verticalBreak = verticalBreak
+        self.horizontalBreak = horizontalBreak
+    
+    def __str__(self):
+        return f"{self.name} ({self.throwingHand[0]})"
+
+
+trackmanFields = { 
+    "ID" : "PitcherId",
+    "Name": "Pitcher",
+    "ThrowingHand": "PitcherThrows",
+    "Set": "PitcherSet",
+    "PitchType": "AutoPitchType",
+    "Speed": "RelSpeed",
+    "VerticalBreak": "InducedVertBreak",
+    "HorizontalBreak": "HorzBreak"
+}
+
 
 # Read and write a TrackMan CSV file.
-with open('./trackman/data/example-trackman.csv', newline='') as readFile:
+pitchers = set()
+with open('./data/example-trackman.csv', newline='') as readFile:
     reader = csv.DictReader(readFile)
     for row in reader:
-        if not row["PitcherId"] in pitchers:
-            pitchers.update({row["PitcherId"]: {"Name": row[pitchFields["Name"]], 
-                                                "ThrowingHand": row[pitchFields["ThrowingHand"]], 
-                                                "Pitches": []
-                                                }})
-        pitchers[row["PitcherId"]]["Pitches"].append({"Set": row[pitchFields["Set"]], 
-                                                "PitchType": row[pitchFields["PitchType"]], 
-                                                "Speed": row[pitchFields["Speed"]], 
-                                                "VerticalBreak": row[pitchFields["VerticalBreak"]], 
-                                                "HorizontalBreak": row[pitchFields["HorizontalBreak"]], 
-                                                })
+        try:
+            pitcher = [p for p in pitchers if p.id == row[trackmanFields["ID"]]][0]
+        except:
+            pitchers.add(Pitcher(row[trackmanFields["ID"]], 
+                                    row[trackmanFields["Name"]], 
+                                    row[trackmanFields["ThrowingHand"]]))
+            pitcher = [p for p in pitchers if p.id == row[trackmanFields["ID"]]][0]
+        finally:
+            pitcher.pitches.append(Pitch(row[trackmanFields["Set"]], 
+                                    row[trackmanFields["PitchType"]], 
+                                    float(row[trackmanFields["Speed"]]), 
+                                    float(row[trackmanFields["VerticalBreak"]]), 
+                                    float(row[trackmanFields["HorizontalBreak"]])))
             
-for pitcher in pitchers.values():
-    # Make matplotlib chart of pitch profiles
-    template = "{} threw {} pitches."
-    print(template.format(pitcher["Name"], len(pitcher["Pitches"])))
+# Make matplotlib chart of pitch profiles
+
+for pitcher in pitchers:
+    firstName = pitcher.name.split(", ")[1]
+    lastName = pitcher.name.split(", ")[0]
+    pitchTypes = set(map(lambda p: p.pitchType, pitcher.pitches))
+
+    fig, ax = plt.subplots()
+    fig.suptitle("Pitch Arsenal Chart (Pitcher's Viewpoint)")
+    ax.set_title(f'{firstName.upper()} {lastName.upper()} ({pitcher.throwingHand[0]}) - {len(pitcher.pitches)} Pitches')
+    ax.set_xlabel('Horizontal Break (in)')
+    ax.set_ylabel('Induced Vertical Break (in)')
+    ax.set_xlim(-25, 25)
+    ax.set_ylim(-25, 25)
+    ax.grid(True)
+
+    colors = ["bo", "go", "ro", "co", "mo", "yo"]
+    colorIndex = 0
+    for pt in pitchTypes:
+        horizBreaks = [p.horizontalBreak for p in pitcher.pitches if p.pitchType == pt]
+        vertBreaks = [p.verticalBreak for p in pitcher.pitches if p.pitchType == pt]
+        ax.plot(horizBreaks, vertBreaks, colors[colorIndex], label=pt)
+        colorIndex += 1
+    
+    ax.legend()
+    fig.savefig(f'./pitch-arsenals/{firstName.upper()}_{lastName.upper()}_{pitcher.id}.png')
