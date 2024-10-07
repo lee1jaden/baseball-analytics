@@ -5,7 +5,7 @@
 - **Title: baseball-analytics**
 - *Author: Jaden Lee*
 - Affiliation: University of Utah
-- Email: <jlee@huntsman.utah.edu>
+- Email: <u1417827@utah.edu>
 - Created Date: September 8, 2024
 - Repository Link: [Click here!](https://github.com/lee1jaden/baseball-analytics)
 - Description: This repository is for personal and team use experimenting with baseball data analytics. 
@@ -19,11 +19,14 @@
 
 1. Install Python and a virtual environment such as venv on your machine. Make sure to activate it before installing dependencies from the 'requirements.txt' file.
 1. To install dependencies, run the following commands:
-    > pip install pipreqs
-    > pip install -r requirements.txt
-1. To update dependencies, run the following command:
-    > pipreqs . --ignore ./.venv --forceS
+    ```
+    pip install pipreqs
+    pip install -r requirements.txt
+    ```
+1. If trying to access data from the FTP server, add a file called "my_secrets.py" and create variables with the HOST, USERNAME, and PASSWORD needed to connect.
 1. Run python executables from the terminal or use the debug window.
+1. To update dependencies, run the following command:
+    > pipreqs . --ignore ./.venv --force
 1. If a Python file does not run, provide executable permissions with:
     > chmod +x [filepath]
 

@@ -48,3 +48,20 @@ import sys
 arguments = sys.argv
 print(arguments)
 """
+
+# ---------------------------------------------------------------------------
+
+import pandas as pd
+
+df = pd.read_csv('./data/example-trackman.csv')
+
+print(df.loc[:, ["Pitcher", "Batter"]]) 
+
+# ---------------------------------------------------------------------------
+
+"""
+import ftplib as FTP
+from my_secrets import HOST, USERNAME, PASSWORD
+
+print (f"{HOST}, {USERNAME}, {PASSWORD}")
+"""

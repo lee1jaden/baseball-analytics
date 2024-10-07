@@ -3,3 +3,6 @@
 
 # Plots saved as PNG files
 *.png
+
+# Secrets file with authentication info
+my_secrets.*
