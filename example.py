@@ -51,17 +51,32 @@ print(arguments)
 
 # ---------------------------------------------------------------------------
 
+"""
 import pandas as pd
 
 df = pd.read_csv('./data/example-trackman.csv')
 
 print(df.loc[:, ["Pitcher", "Batter"]]) 
+"""
 
 # ---------------------------------------------------------------------------
 
 """
-import ftplib as FTP
+from ftplib import FTP
 from my_secrets import HOST, USERNAME, PASSWORD
+import os
 
-print (f"{HOST}, {USERNAME}, {PASSWORD}")
+ftp = FTP(HOST, USERNAME, PASSWORD)
+
+local_dir = "data/"
+server_dir = "v3/2024/10/02/CSV"
+ftp.cwd(server_dir)
+csv_file = ftp.nlst()[0]
+
+with open(local_dir + csv_file, 'w') as file:
+    ftp.retrlines("RETR " + csv_file, lambda text : file.write(text + '\n'))
+
+ftp.quit()
+os.remove(local_dir + csv_file)
 """
+    

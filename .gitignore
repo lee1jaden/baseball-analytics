@@ -1,8 +1,10 @@
 # Python virtual environment files
 .venv
 
-# Plots saved as PNG files
-*.png
-
 # Secrets file with authentication info
 my_secrets.*
+__pycache__
+
+# Player data and reports
+data
+reports
