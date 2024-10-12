@@ -3,7 +3,7 @@
 ## Overview
 
 - **Title: baseball-analytics**
-- *Author: Jaden Lee*
+- *Owner: Jaden Lee*
 - Affiliation: University of Utah
 - Email: <u1417827@utah.edu>
 - Created Date: September 8, 2024
@@ -33,4 +33,19 @@
 ## References
 
 1. Here is a link to an overview of the data typically contained in TrackMan CSV files: <https://support.trackmanbaseball.com/hc/en-us/articles/5089413493787-V3-FAQs-Radar-Measurement-Glossary-Of-Terms>
-1. The example TrackMan CSV file was downloaded from a website belonging to Roanoke College ([Click here!](<https://apps.roanoke.edu/minton/statsrcb20.html>)). It uses data from Game 1 vs. Elizabethtown of the 2020 season.
+
+## Files
+
+### Pitcher Development Reports
+
+- Name: pitcher-development.py
+- Author: Jaden Lee
+- Created Date: September 8, 2024
+- Description: This folder is specifically for analyzing TrackMan data for pitchers. The plan is to run these after games and scrimmages to provide feedback for pitchers. The emphasis should be on process more than results.
+
+### Sandbox
+
+- Name: example.py
+- Author: Jaden Lee
+- Created Date: September 8, 2024
+- Description: This file is to experiment with the libraries we need. It can be a sandbox file to test out code.
