@@ -2,9 +2,13 @@
 
 import os
 from ftplib import FTP
-from my_secrets import HOST, USERNAME, PASSWORD
+from my_secrets import HOST, USERNAME, PASSWORD, SERVER_DIRECTORY
 import matplotlib.pyplot as plt
 import pandas as pd
+
+# Create file storage locations for data and reports
+data_dir = "./data"
+report_dir = "./reports"
 
 # Create macros for the fields of a TrackMan CSV file
 ID = "PitcherId"
@@ -18,21 +22,20 @@ HORIZONTAL_BREAK = "HorzBreak"
 
 # Copy TrackMan data from the FTP server
 ftp = FTP(HOST, USERNAME, PASSWORD)
-local_dir = "data/"
-server_dir = "v3/2024/10/02/CSV"
-ftp.cwd(server_dir)
-csv_file = ftp.nlst()[0]
-with open(local_dir + csv_file, 'w') as file:
-    ftp.retrlines("RETR " + csv_file, lambda text : file.write(text + '\n'))
+ftp.cwd(SERVER_DIRECTORY)
+trackman_file = ftp.nlst()[0]
+os.makedirs(data_dir, exist_ok=True)
+with open(f"{data_dir}/{trackman_file}", 'w') as file:
+    ftp.retrlines("RETR " + trackman_file, lambda text : file.write(text + '\n'))
 ftp.quit()
 
-# Process the TrackMan CSV file and create reports.
-df = pd.read_csv(local_dir + csv_file)
+# Process the TrackMan CSV file and create reports
+df = pd.read_csv(f"{data_dir}/{trackman_file}")
 pitcher_ids = df[ID].unique()
             
 for pid in pitcher_ids:
 
-    # Record information for a given pitcher.
+    # Record information for a given pitcher
     pitcher_df = df.loc[df[ID] == pid]
     name = pitcher_df[NAME].unique()[0]
     last_name = name.split(", ")[0]
@@ -59,7 +62,9 @@ for pid in pitcher_ids:
         colorIndex += 1
     
     ax.legend()
-    filepath = f'./reports/{first_name}_{last_name}_{pid}'
-    if not os.path.exists(filepath):
-        os.makedirs(filepath)
-    fig.savefig(f'{filepath}/pitch-arsenal-2.png')
+    filepath = f'{report_dir}/{first_name}_{last_name}'
+    os.makedirs(filepath, exist_ok=True)
+    fig.savefig(f'{filepath}/pitch-arsenal.png')
+
+os.remove(f"{data_dir}/{trackman_file}")
+os.rmdir(data_dir)
