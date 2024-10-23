@@ -26,9 +26,13 @@
 1. If trying to access data from the FTP server, add a file called "my_secrets.py" and create variables with the HOST, USERNAME, PASSWORD, and SERVER_DIRECTORY needed to connect.
 1. Run python executables from the terminal or use the debug window.
 1. To update dependencies, run the following command:
-    > pipreqs . --ignore ./.venv --force
+    ```
+    pipreqs . --ignore ./.venv --force
+    ```
 1. If a Python file does not run, provide executable permissions with:
-    > chmod +x [filepath]
+    ```
+    chmod +x [filepath]
+    ```
 
 ## References
 
@@ -42,6 +46,7 @@
 - Author: Jaden Lee
 - Created Date: September 8, 2024
 - Description: This folder is specifically for analyzing TrackMan data for pitchers. The plan is to run these after games and scrimmages to provide feedback for pitchers. The emphasis should be on process more than results.
+- Includes: outing results, points of emphasis (1st pitch strike) pitch execution, mechanical indicators
 
 ### Sandbox
 

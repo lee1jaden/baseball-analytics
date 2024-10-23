@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 
 import os
+import io
 from ftplib import FTP
-from my_secrets import HOST, USERNAME, PASSWORD, SERVER_DIRECTORY
+from my_secrets import HOST, USERNAME, PASSWORD
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from matplotlib.backends.backend_pdf import PdfPages
 import pandas as pd
 
 # Create file storage locations for data and reports
 data_dir = "./data"
 report_dir = "./reports"
+# The date must be in YYYY/MM/DD format
+date = "2024/10/02"
+date_dashed = date.replace('/', '-')
+server_dir = f"v3/{date}/CSV/"
 
 # Create macros for the fields of a TrackMan CSV file
 ID = "PitcherId"
@@ -32,14 +40,25 @@ EXTENSION = "Extension"
 
 # Copy TrackMan data from the FTP server
 ftp = FTP(HOST, USERNAME, PASSWORD)
-ftp.cwd(SERVER_DIRECTORY)
+ftp.cwd(server_dir)
 trackman_file = ftp.nlst()[0]
 os.makedirs(data_dir, exist_ok=True)
 with open(f"{data_dir}/{trackman_file}", 'w') as file:
     ftp.retrlines("RETR " + trackman_file, lambda text : file.write(text + '\n'))
 ftp.quit()
 
-# Process the TrackMan CSV file and create reports
+# Create canvas for the PDF report
+pdf = canvas.Canvas(f"{report_dir}/{date_dashed}-pitching.pdf", pageSize=letter)
+pdf_width, pdf_height = letter
+
+def plotToPDF(figure, x, y, width, height):
+    plotImg = io.BytesIO()
+    figure.savefig(plotImg, format='png')
+    plotImg.seek(0)
+    image = ImageReader(plotImg)
+    pdf.drawImage(image, x, y, width, height)
+
+# Begin processing the TrackMan CSV file
 df = pd.read_csv(f"{data_dir}/{trackman_file}")
 pitcher_ids = df[ID].unique()
             
@@ -55,11 +74,8 @@ for pid in pitcher_ids:
 
     # Make matplotlib chart of pitch profiles.
     os.makedirs(report_dir, exist_ok=True)
-    pdf = PdfPages(f'{report_dir}/{first_name}_{last_name}.pdf') 
 
-    plt.rcParams["figure.autolayout"] = True
-    # plt.rcParams['axes.prop_cycle'] = cycler(color=['r', 'g', 'b', 'y'])
-
+    # Set up pitch arsenal chart
     fig1, arsenal = plt.subplots()
     fig1.suptitle(f'{first_name} {last_name} ({throwing_hand[0]}) - {len(pitcher_df)} Pitches')
     arsenal.set_title('Pitch Arsenal')
@@ -69,6 +85,7 @@ for pid in pitcher_ids:
     arsenal.set_ylim(-25, 25)
     arsenal.grid(True)
 
+    # Set up pitch location chart
     fig2, locations = plt.subplots()
     fig2.suptitle(f'{first_name} {last_name} ({throwing_hand[0]}) - {len(pitcher_df)} Pitches')
     locations.set_title('Pitch Locations')
@@ -80,6 +97,7 @@ for pid in pitcher_ids:
     rect = patches.Rectangle((-8.5/12.0, 1.5), 17.0/12.0, 2.5, linewidth=2, edgecolor='none', facecolor='0.75')
     locations.add_patch(rect)
 
+    # Set up pitch release point chart
     fig3, release = plt.subplots()
     fig2.suptitle(f'{first_name} {last_name} ({throwing_hand[0]}) - {len(pitcher_df)} Pitches')
     release.set_title('Pitch Release Points')
@@ -104,7 +122,7 @@ for pid in pitcher_ids:
         extension_avg = pitch_type_df[EXTENSION].mean().round(2)
         extension_std = pitch_type_df[EXTENSION].std().round(3)
         arsenal.plot(pitch_type_df[HORIZONTAL_BREAK], pitch_type_df[VERTICAL_BREAK], f"{colors[colorIndex]}o", label=f'{pt} ({spinrate_avg} rpm)')
-        # Try to classify by strikes and balls and improve strike zone position
+        # Try to classify by strikes and balls and improve strike zone position. Switch to scatter. Add text labels for pitchNo
         locations.plot(pitch_type_df[HORIZONTAL_POSITION], pitch_type_df[VERTICAL_POSITION], f"{colors[colorIndex]}o", label=f'{pt} ({velo_avg} mph)')
         release.plot(pitch_type_df[RELEASE_SIDE], pitch_type_df[RELEASE_HEIGHT], f"{colors[colorIndex]}o", label=f'{pt} ({extension_avg} ft ext)')
         colorIndex += 1
@@ -113,10 +131,12 @@ for pid in pitcher_ids:
     locations.legend()
     release.legend()
 
-    for fig in [plt.figure(n) for n in plt.get_fignums()]:  
-        fig.savefig(pdf, format='pdf') 
+    for index, fig in [(n, plt.figure(n)) for n in plt.get_fignums()]:  
+        plotToPDF(fig, 1*inch, 1 + 3*index*inch, 2*inch, 2*inch)
         plt.close(fig)
-    pdf.close()   
+    pdf.showPage()
 
+pdf.save()
 os.remove(f"{data_dir}/{trackman_file}")
 os.rmdir(data_dir)
+

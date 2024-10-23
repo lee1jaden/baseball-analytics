@@ -80,3 +80,30 @@ ftp.quit()
 os.remove(local_dir + csv_file)
 """
     
+# ---------------------------------------------------------------------------
+
+"""
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+import matplotlib.pyplot as plt
+
+width, height = letter  #keep for later
+def hello(c):
+    c.drawString(100,100,"Hello World")
+    c.line(100,100,200,100)
+    plt.plot([1, 2, 3, 4], [1, 4, 9, 16], "ro", label="Fastball")
+    b = io.BytesIO()
+    plt.savefig(b, format='png')
+    b.seek(0)
+    image = ImageReader(b)
+    c.drawImage(image, 200, 200, width=2*inch, height=2*inch, mask=None)
+
+c = canvas.Canvas("hello.pdf", pageSize=letter)
+for i in range(5):
+    hello(c)
+    c.showPage()
+c.save()
+"""
