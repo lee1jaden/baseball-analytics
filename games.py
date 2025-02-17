@@ -14,7 +14,7 @@ MONTH = "07"
 DAY = "12"
 
 
-def main(): 
+def main():
     matching_files = []
 
     ftp = FTP(HOST, USERNAME, PASSWORD)
@@ -23,13 +23,15 @@ def main():
         if MONTH is None or month == MONTH:
             ftp.cwd(month)
             for day in ftp.nlst():
-                if DAY is None or day == DAY: 
+                if DAY is None or day == DAY:
                     ftp.cwd(f"{day}/CSV")
                     print(f"{YEAR}-{month}-{day}...")
                     for csv_file in ftp.nlst():
                         if "playerpositioning" not in csv_file:
                             if file_matches(ftp, csv_file):
-                                matching_files.append(f"/v3/{YEAR}/{month}/{day}/{csv_file}")
+                                matching_files.append(
+                                    f"v3/{YEAR}/{month}/{day}/CSV/{csv_file}"
+                                )
                     ftp.cwd("../..")
             ftp.cwd("..")
     ftp.quit()
@@ -51,8 +53,8 @@ def save_matching_files(matching_files: list[str]):
     games_filepath = f"{DATA_DIR}/{NAME}.txt"
     with open(games_filepath, "w") as games_file:
         for match_file in matching_files:
-            games_file.write(match_file + '\n')
+            games_file.write(match_file + "\n")
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
